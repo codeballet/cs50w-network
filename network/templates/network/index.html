@@ -7,8 +7,9 @@
         <div>{{ message }}</div>
     {% endif %}
 
+    {% if user.is_authenticated %}
     <div class="border p-3">
-        <h3>New Post</h3>
+        <h4>New Post</h4>
 
         <form action="{% url 'index' %}" method="POST">
             {% csrf_token %}
@@ -17,7 +18,18 @@
             </div>
             <input class="btn btn-primary" type="submit" value="Post">
         </form>
-
+        {% endif %}
     </div>
 
+    {% for post in posts %}
+    <div class="border mt-2 p-3">
+        <h4>{{ post.user.username }}</h4>
+        <div>
+            {{ post.content }}
+        </div>
+        <div class="text-muted mt-1">
+            {{ post.pub_date }}
+        </div>
+    </div>
+    {% endfor %}
 {% endblock %}
