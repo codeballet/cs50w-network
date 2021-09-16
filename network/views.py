@@ -4,10 +4,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import Post, User
 
 
 def index(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        # attempt to save post to database
+        try:
+            post = Post.objects.create(
+                user=request.user, content=request.POST["content"])
+            post.save()
+        except:
+            return render(request, "network/index.html", {
+                "message": "Post not added to database."
+            })
+
     return render(request, "network/index.html")
 
 
