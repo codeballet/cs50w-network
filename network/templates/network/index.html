@@ -1,35 +1,28 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     <h1>All Posts</h1>
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+    <div id="index-message"></div>
 
     {% if user.is_authenticated %}
     <div class="border p-3">
         <h4>New Post</h4>
 
-        <form action="{% url 'index' %}" method="POST">
+        <form id="create-form">
             {% csrf_token %}
             <div class="form-group">
-                <input type="text" class="form-control" id="new-post" name="content">
+                <input id="create-content" type="text" class="form-control">
             </div>
-            <input class="btn btn-primary" type="submit" value="Post">
+            <input class="btn btn-primary" type="submit" value="Create">
         </form>
-        {% endif %}
     </div>
+    {% endif %}
 
-    {% for post in posts %}
-    <div class="border mt-2 p-3">
-        <h4>{{ post.user.username }}</h4>
-        <div>
-            {{ post.content }}
-        </div>
-        <div class="text-muted mt-1">
-            {{ post.pub_date }}
-        </div>
-    </div>
-    {% endfor %}
+    <div id="posts"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

@@ -1,28 +1,17 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Post, User
 
 
 def index(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        # attempt to save post to database
-        try:
-            post = Post.objects.create(
-                user=request.user, content=request.POST["content"])
-            post.save()
-        except:
-            return render(request, "network/index.html", {
-                "message": "Post not added to database."
-            })
-
-    posts = Post.objects.all()
-    return render(request, "network/index.html", {
-        "posts": posts
-    })
+    return render(request, "network/index.html")
 
 
 def login_view(request):
@@ -48,6 +37,38 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+
+@csrf_exempt
+def create_post(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        # attempt to save post to database
+        try:
+            data = json.loads(request.body)
+            content = data.get("content", "")
+
+            post = Post.objects.create(
+                user=request.user, content=content)
+            post.save()
+
+            return JsonResponse({
+                "message": "Post added successfully"
+            }, status=201)
+        except:
+            return JsonResponse({
+                "error": "Post not added to database"
+            }, status=400)
+
+
+def posts(request):
+    posts = Post.objects.order_by('-timestamp')
+    return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
+def profile_view(request, user_id):
+    return render(request, "network/profile.html", {
+        "profile_id": user_id
+    })
 
 
 def register(request):
