@@ -11,7 +11,11 @@ from .models import Post, User
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.order_by('-timestamp')
+
+    return render(request, "network/index.html", {
+        "posts": posts
+    })
 
 
 def login_view(request):
