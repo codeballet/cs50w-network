@@ -2,13 +2,53 @@
 {% load static %}
 
 {% block body %}
-    <h1>{{ user.username }}'s profile</h1>
+    <h1>{{ profile.username }}'s profile</h1>
 
-    <div>
-        Followers:
+
+    <div class="mt-2">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
     </div>
+    <nav aria-label="Posts pages">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% for post in page_obj %}
+    <div class="border p-3 mt-2">
+        <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+        <div>{{ post.content }}</div>
+        <div class="text-muted">{{ post.timestamp }}</div>
+        <div>Likes: {{ post.likes }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="mt-2">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
+    <nav aria-label="Posts pages">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}
 
-{% block script %}
+<!-- {% block script %}
     <script src="{% static 'mail/profile.js' %}"></script>
-{% endblock %}
+{% endblock %} -->

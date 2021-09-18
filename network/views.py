@@ -87,9 +87,17 @@ def posts(request):
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
-def profile_view(request, user_id):
+def profile(request, user_id):
+    profile = User.objects.get(id=user_id)
+    posts = Post.objects.filter(user=profile).order_by('-timestamp')
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/profile.html", {
-        "profile_id": user_id
+        "profile": profile,
+        "page_obj": page_obj
     })
 
 
