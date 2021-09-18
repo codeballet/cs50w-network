@@ -39,7 +39,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-@csrf_exempt
 def create_post(request):
     if request.method == "POST" and request.user.is_authenticated:
         # attempt to save post to database
