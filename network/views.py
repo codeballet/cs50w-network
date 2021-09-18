@@ -1,9 +1,7 @@
-import json
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -62,31 +60,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def create_post(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        # attempt to save post to database
-        try:
-            data = json.loads(request.body)
-            content = data.get("content", "")
-
-            post = Post.objects.create(
-                user=request.user, content=content)
-            post.save()
-
-            return JsonResponse({
-                "message": "Post added successfully"
-            }, status=201)
-        except:
-            return JsonResponse({
-                "error": "Post not added to database"
-            }, status=400)
-
-
-def posts(request):
-    posts = Post.objects.order_by('-timestamp')
-    return JsonResponse([post.serialize() for post in posts], safe=False)
-
-
 def profile(request, user_id):
     profile = User.objects.get(id=user_id)
     posts = Post.objects.filter(user=profile).order_by('-timestamp')
@@ -126,17 +99,3 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
-
-
-def user_posts(request):
-    try:
-        data = json.loads(request.body)
-        user = data.get("user", "")
-        user_posts = Post.objects.filter(user=user).order_by('-timestamp')
-        return JsonResponse(
-            [post.serialize() for post in user_posts], safe=False
-        )
-    except:
-        return JsonResponse({
-            "error": "Cannot acquire posts from user"
-        })
