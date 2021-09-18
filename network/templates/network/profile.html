@@ -2,27 +2,8 @@
 {% load static %}
 
 {% block body %}
-    <h1>All Posts</h1>
+    <h1>{{ profile.username }}'s profile</h1>
 
-    {% if message %}
-        <div class="alert alert-info" role="alert">
-            {{ message }}
-        </div>
-    {% endif %}
-
-    {% if user.is_authenticated %}
-    <div class="border p-3">
-        <h4>New Post</h4>
-
-        <form action="{% url 'index' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <input name="content" type="text" class="form-control">
-            </div>
-            <input class="btn btn-primary" type="submit" value="Create">
-        </form>
-    </div>
-    {% endif %}
 
     <div class="mt-2">
         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
@@ -69,5 +50,5 @@
 {% endblock %}
 
 <!-- {% block script %}
-    <script src="{% static 'network/index.js' %}"></script>
+    <script src="{% static 'mail/profile.js' %}"></script>
 {% endblock %} -->
