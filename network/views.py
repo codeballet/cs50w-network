@@ -1,5 +1,6 @@
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.response import JsonResponse
@@ -11,10 +12,28 @@ from .models import Post, User
 
 
 def index(request):
+    message = ''
+    if request.method == "POST" and request.user.is_authenticated:
+        # attempt to save post to database
+        try:
+            content = request.POST["content"]
+
+            post = Post.objects.create(
+                user=request.user, content=content)
+            post.save()
+
+            message = "Post successfully created!"
+        except:
+            message = "Failed to add post!"
+
     posts = Post.objects.order_by('-timestamp')
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     return render(request, "network/index.html", {
-        "posts": posts
+        "message": message,
+        "page_obj": page_obj
     })
 
 

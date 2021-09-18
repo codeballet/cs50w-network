@@ -8,23 +8,45 @@
     </div>
     <h1>All Posts</h1>
 
-    <div id="index-message"></div>
+    {% if message %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
 
     {% if user.is_authenticated %}
     <div class="border p-3">
         <h4>New Post</h4>
 
-        <form id="create-form">
+        <form action="{% url 'index' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
-                <input id="create-content" type="text" class="form-control">
+                <input name="content" type="text" class="form-control">
             </div>
             <input class="btn btn-primary" type="submit" value="Create">
         </form>
     </div>
     {% endif %}
 
-    {% for post in posts %}
+    <div class="mt-2">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
+
+    <nav aria-label="Posts pages">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% for post in page_obj %}
     <div class="border p-3 mt-2">
         <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
         <div>{{ post.content }}</div>
@@ -33,7 +55,23 @@
     </div>
     {% endfor %}
 
-    <div id="posts"></div>
+    <div class="mt-2">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
+    
+    <nav aria-label="Posts pages">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}
 
 <!-- {% block script %}
