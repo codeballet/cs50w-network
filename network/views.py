@@ -64,12 +64,6 @@ def posts(request):
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
-def profile_view(request, user_id):
-    return render(request, "network/profile.html", {
-        "profile_id": user_id
-    })
-
-
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -95,3 +89,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def user_posts(request):
+    try:
+        data = json.loads(request.body)
+        user = data.get("user", "")
+        user_posts = Post.objects.filter(user=user).order_by('-timestamp')
+        return JsonResponse(
+            [post.serialize() for post in user_posts], safe=False
+        )
+    except:
+        return JsonResponse({
+            "error": "Cannot acquire posts from user"
+        })

@@ -64,8 +64,9 @@ function load_posts() {
             post_div.id = `post_${post.id}`;
             post_div.className = 'border p-3 mt-2';
 
-            const username_div = document.createElement('div');
-            username_div.className = 'h4';
+            const username_div = document.createElement('a');
+            username_div.className = 'font-weight-bold'
+            username_div.href = `profile/${post.creator_id}`;
 
             const content_div = document.createElement('div');
 
