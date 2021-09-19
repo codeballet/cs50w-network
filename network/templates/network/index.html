@@ -1,6 +1,5 @@
 {% extends "network/layout.html" %}
 {% load static %}
-{% load zip_likes %}
 
 {% block body %}
     <h1>All Posts</h1>
@@ -42,13 +41,12 @@
         </ul>
     </nav>
 
-    {% for post, like in page_obj|zip:likes %}
+    {% for post in page_obj %}
     <div class="border p-3 mt-2">
         <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
         <div>{{ post.content }}</div>
         <div class="text-muted">{{ post.timestamp }}</div>
-        <a href="{% url 'like' post.id %}"><span data-feather="heart"></span></a>
-        <span id="likes">{{ like }}</span>
+        <button id="likes" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
     </div>
     {% endfor %}
 

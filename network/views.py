@@ -30,15 +30,9 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Create a list of likes for page_obj
-    likes = []
-    for page in page_obj:
-        likes.append(page.like.all().count())
-
     return render(request, "network/index.html", {
         "message": message,
         "page_obj": page_obj,
-        "likes": likes
     })
 
 
