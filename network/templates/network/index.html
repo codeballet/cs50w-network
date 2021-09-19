@@ -46,7 +46,8 @@
         <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
         <div>{{ post.content }}</div>
         <div class="text-muted">{{ post.timestamp }}</div>
-        <button id="likes" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
+        <button id="likes-button" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
+        <div id="likes-count"></div>
     </div>
     {% endfor %}
 
@@ -66,4 +67,9 @@
             {% endif %}
         </ul>
     </nav>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

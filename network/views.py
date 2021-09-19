@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -26,9 +27,11 @@ def index(request):
 
     # set up pagination
     posts = Post.objects.order_by('-timestamp')
+    print(f"Posts: {posts}")
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    print(f"page_object: {page_obj}")
 
     return render(request, "network/index.html", {
         "message": message,
@@ -51,6 +54,18 @@ def like(request, post_id):
         "message": "Like added"
     })
 
+
+def likes_count(request, post_id):
+    try:
+        post = Post.objects.get(pk = post_id)
+        likes = post.like.count()
+        return JsonResponse({
+            "likes": likes
+        }, status=200)
+    except:
+        return JsonResponse({
+            "error": f"Could not acquire likes for post id {post_id}"
+        }, status=400)
 
 def login_view(request):
     if request.method == "POST":
