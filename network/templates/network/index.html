@@ -44,13 +44,17 @@
             </ul>
         </nav>
 
-        {% for post in page_obj %}
+        {% for post, like in page_obj|zip:likes %}
         <div class="border p-3 mt-2">
+            <div>{{ post.id }}</div>
             <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
             <div>{{ post.content }}</div>
             <div class="text-muted">{{ post.timestamp }}</div>
-            <button id="likes-button" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
-            <div id="likes-count"></div>
+            <div>
+                <span>Likes:</span>
+                <span id="likes-count">{{ like }}</span>
+            </div>
+            <button id="like-button_{{ post.id }}" type="button" class="like-button btn btn-outline-primary btn-sm mt-2">Like</button>
         </div>
         {% endfor %}
 
@@ -78,5 +82,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/like.js' %}"></script>
+    <script src="{% static 'network/likes.js' %}"></script>
 {% endblock %}

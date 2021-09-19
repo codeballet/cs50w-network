@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -31,29 +32,32 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # get likes counts
+    # get like counts
     likes = []
+    for page in page_obj:
+        likes.append(page.like.count())
 
     return render(request, "network/index.html", {
         "message": message,
         "page_obj": page_obj,
+        "likes": likes
     })
 
 
+@login_required
 def like(request, post_id):
-    if request.user.is_authenticated:
-        try:
-            post = Post.objects.get(pk=post_id)
-            post.like.add(request.user)
-            post.save()
-        except:
-            return render(request, "network/index.html", {
-                "message": "Like not added"
-            })
+    print("In the like view")
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required"}, status=400)
 
-    return HttpResponseRedirect(reverse("index"), {
-        "message": "Like added"
-    })
+    # save the like
+    try:
+        post = Post.objects.get(pk=post_id)
+        post.like.add(request.user)
+        post.save()
+        return JsonResponse({"message": "Like added"}, status=201)
+    except:
+        return JsonResponse({"error": "Like not added"}, status=400)
 
 
 def likes_count(request, post_id):
