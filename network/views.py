@@ -24,14 +24,37 @@ def index(request):
         except:
             message = "Failed to add post!"
 
+    # set up pagination
     posts = Post.objects.order_by('-timestamp')
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Create a list of likes for page_obj
+    likes = []
+    for page in page_obj:
+        likes.append(page.like.all().count())
+
     return render(request, "network/index.html", {
         "message": message,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "likes": likes
+    })
+
+
+def like(request, post_id):
+    if request.user.is_authenticated:
+        try:
+            post = Post.objects.get(pk=post_id)
+            post.like.add(request.user)
+            post.save()
+        except:
+            return render(request, "network/index.html", {
+                "message": "Like not added"
+            })
+
+    return HttpResponseRedirect(reverse("index"), {
+        "message": "Like added"
     })
 
 
