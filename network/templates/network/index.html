@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% load zip_lists %}
 
 {% block body %}
     <h1>All Posts</h1>
@@ -77,5 +78,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/index.js' %}"></script>
+    <script src="{% static 'network/like.js' %}"></script>
 {% endblock %}
