@@ -24,49 +24,55 @@
     </div>
     {% endif %}
 
-    <div class="mt-2">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </div>
-    <nav aria-label="Posts pages">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-    
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% if page_obj.end_index > 0 %}
 
-    {% for post in page_obj %}
-    <div class="border p-3 mt-2">
-        <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-        <div>{{ post.content }}</div>
-        <div class="text-muted">{{ post.timestamp }}</div>
-        <button id="likes-button" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
-        <div id="likes-count"></div>
-    </div>
-    {% endfor %}
+        <div class="mt-2">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </div>
+        <nav aria-label="Posts pages">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+        
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
 
-    <div class="mt-2">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </div>
-    <nav aria-label="Posts pages">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-    
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+        {% for post in page_obj %}
+        <div class="border p-3 mt-2">
+            <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+            <div>{{ post.content }}</div>
+            <div class="text-muted">{{ post.timestamp }}</div>
+            <button id="likes-button" type="button" class="btn btn-outline-primary btn-sm mt-2">Like</button>
+            <div id="likes-count"></div>
+        </div>
+        {% endfor %}
+
+        <div class="mt-2">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </div>
+        <nav aria-label="Posts pages">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+        
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    {% else %}
+    <div>No posts!</div>
+    {% endif %}
 
 {% endblock %}
 
