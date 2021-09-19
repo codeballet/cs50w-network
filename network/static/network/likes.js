@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function likes(post_id) {
+    // TODO: add csrf token verification
+
     fetch(`like/${post_id}`, {
         method: 'POST'
     })
