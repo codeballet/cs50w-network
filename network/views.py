@@ -46,16 +46,18 @@ def index(request):
 
 @login_required
 def like(request, post_id):
-    print("In the like view")
     if request.method != "POST":
         return JsonResponse({"error": "POST request required"}, status=400)
 
     # save the like
     try:
         post = Post.objects.get(pk=post_id)
-        post.like.add(request.user)
-        post.save()
-        return JsonResponse({"message": "Like added"}, status=201)
+        if post.user == request.user:
+            return JsonResponse({"message": "You cannot like your own post"}, status=406)
+        else:
+            post.like.add(request.user)
+            post.save()
+            return JsonResponse({"message": "Like added"}, status=201)
     except:
         return JsonResponse({"error": "Like not added"}, status=400)
 

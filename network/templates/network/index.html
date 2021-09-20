@@ -52,12 +52,14 @@
             <div class="text-muted">{{ post.timestamp }}</div>
             <div>
                 <span>Likes:</span>
-                <span id="likes-count">{{ like }}</span>
+                <span id="likes-count_{{ post.id }}">{{ like }}</span>
             </div>
+            {% if user.is_authenticated and post.user != request.user %}
             <form id="like-form_{{ post.id }}" class="like-form">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Like</button>
+                <button id="like-button_{{ post.id }}" type="submit" class="like-button btn btn-outline-primary btn-sm mt-2">Like</button>
             </form>
+            {% endif %}
         </div>
         {% endfor %}
 
