@@ -54,7 +54,10 @@
                 <span>Likes:</span>
                 <span id="likes-count">{{ like }}</span>
             </div>
-            <button id="like-button_{{ post.id }}" type="button" class="like-button btn btn-outline-primary btn-sm mt-2">Like</button>
+            <form id="like-form_{{ post.id }}" class="like-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Like</button>
+            </form>
         </div>
         {% endfor %}
 
