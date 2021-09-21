@@ -4,9 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
         button_text(button.id);
     })
 
-    // listen to like submits
+    // listen to like unlike submits
     document.querySelectorAll('.like-form').forEach(form => {        
         form.onsubmit = function(e) {
+            e.preventDefault();
             // get the post id from form id
             form_id = e.target.id;
             post_id = form_id.split("_")[1];
@@ -18,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function button_text(button_id) {
-    console.log(button_id)
     post_id = button_id.split('_')[1];
     // fetch the post
     fetch(`likers/${post_id}`)
@@ -45,13 +45,21 @@ function likes(post_id) {
     // acquire csrf token
     const csrftoken = getCookie('csrftoken');
 
-    // register the like
+    // get present state of like button
+    const wish = document.querySelector(`#like-button_${post_id}`).innerHTML;
+    console.log(wish.toLowerCase()
+    );
+
+    // update the users like or unlike wish
     fetch(`like/${post_id}`, {
         method: 'POST',
         mode: 'same-origin',
         headers: {
             'X-CSRFToken': csrftoken
-        }
+        },
+        body: JSON.stringify({
+            'wish': wish.toLowerCase()
+        })
     })
     .then(response => response.json())
     .then(message => {
@@ -66,6 +74,10 @@ function likes(post_id) {
         .catch(error => {
             console.log('Error:', error);
         })
+    })
+    .then(() => {
+        // update the like button
+        button_text(`like-button_${post_id}`);
     })
     .catch(error => {
         console.log('Error:', error);

@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -113,18 +114,30 @@ def register(request):
 # API
 @login_required
 def like(request, post_id):
+    print("In the like view function")
     if request.method != "POST":
         return JsonResponse({"error": "POST request required"}, status=400)
 
-    # save the like
+    # get the body of the request
+    data = json.loads(request.body)
+    print(f"Received data in body: {data['wish']}")
+
+    # like or unlike
     try:
         post = Post.objects.get(pk=post_id)
+        print(f"Post: {post}")
         if post.user == request.user:
             return JsonResponse({"message": "You cannot like your own post"}, status=406)
-        else:
+        elif data['wish'] == 'like':
+            print("inside the like branch")
             post.like.add(request.user)
             post.save()
             return JsonResponse({"message": "Like added"}, status=201)
+        elif data['wish'] == 'unlike':
+            print("inside the unlike brach")
+            post.like.remove(request.user)
+            post.save()
+            return JsonResponse({"message": "Like removed"}, status=201)
     except:
         return JsonResponse({"error": "Like not added"}, status=400)
 
