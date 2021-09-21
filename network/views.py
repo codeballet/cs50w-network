@@ -44,37 +44,6 @@ def index(request):
     })
 
 
-@login_required
-def like(request, post_id):
-    if request.method != "POST":
-        return JsonResponse({"error": "POST request required"}, status=400)
-
-    # save the like
-    try:
-        post = Post.objects.get(pk=post_id)
-        if post.user == request.user:
-            return JsonResponse({"message": "You cannot like your own post"}, status=406)
-        else:
-            post.like.add(request.user)
-            post.save()
-            return JsonResponse({"message": "Like added"}, status=201)
-    except:
-        return JsonResponse({"error": "Like not added"}, status=400)
-
-
-def likes_count(request, post_id):
-    try:
-        post = Post.objects.get(pk=post_id)
-        likes = post.like.count()
-        return JsonResponse({
-            "likes": likes
-        }, status=200)
-    except:
-        return JsonResponse({
-            "error": f"Could not acquire likes for post id {post_id}"
-        }, status=400)
-
-
 def login_view(request):
     if request.method == "POST":
 
@@ -139,3 +108,52 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+# API
+@login_required
+def like(request, post_id):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required"}, status=400)
+
+    # save the like
+    try:
+        post = Post.objects.get(pk=post_id)
+        if post.user == request.user:
+            return JsonResponse({"message": "You cannot like your own post"}, status=406)
+        else:
+            post.like.add(request.user)
+            post.save()
+            return JsonResponse({"message": "Like added"}, status=201)
+    except:
+        return JsonResponse({"error": "Like not added"}, status=400)
+
+
+def likes_count(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+        likes = post.like.count()
+        return JsonResponse({
+            "likes": likes
+        }, status=200)
+    except:
+        return JsonResponse({
+            "error": f"Could not acquire likes for post id {post_id}"
+        }, status=400)
+
+
+def likers(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+        likers = post.like.all()
+        likers_list = []
+        for liker in likers:
+            likers_list.append(liker.username)
+
+        return JsonResponse({
+            "likers": likers_list
+        }, status=200)
+    except:
+        return JsonResponse({
+            "error": f"Could not acquire post id {post_id}"
+        }, status=400)

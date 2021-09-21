@@ -18,12 +18,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function button_text(button_id) {
+    console.log(button_id)
     post_id = button_id.split('_')[1];
     // fetch the post
+    fetch(`likers/${post_id}`)
+    .then(response => response.json())
+    .then(message => {
+        console.log(message);
+        // check if post is liked by current user
+        const current_user = document.querySelector('#current-user').text
+        if (message.likers.includes(current_user)) {
+            document.querySelector(`#${button_id}`).innerHTML = "Unlike";
+        } else {
+            document.querySelector(`#${button_id}`).innerHTML = "Like";
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
 
-    // check if the post is liked by the current user
     // if so, write 'Unlike' in the button
-    const current_user = document.querySelector('#current-user').text
 }
 
 
@@ -55,7 +69,7 @@ function likes(post_id) {
     })
     .catch(error => {
         console.log('Error:', error);
-    })
+    });
 }
 
 

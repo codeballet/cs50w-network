@@ -13,5 +13,6 @@ urlpatterns = [
 
     # API
     path('like/<int:post_id>', views.like, name="like"),
-    path('likes/<int:post_id>', views.likes_count, name="likes")
+    path('likes/<int:post_id>', views.likes_count, name="likes"),
+    path('likers/<int:post_id>', views.likers, name="likers")
 ]

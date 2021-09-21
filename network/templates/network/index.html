@@ -57,7 +57,7 @@
             {% if user.is_authenticated and post.user != request.user %}
             <form id="like-form_{{ post.id }}" class="like-form">
                 {% csrf_token %}
-                <button id="like-button_{{ post.id }}" type="submit" class="like-button btn btn-outline-primary btn-sm mt-2">Like</button>
+                <button id="like-button_{{ post.id }}" type="submit" class="like-button btn btn-outline-primary btn-sm mt-2"></button>
             </form>
             {% endif %}
         </div>
