@@ -121,27 +121,22 @@ def register(request):
 # API
 @login_required
 def like(request, post_id):
-    print("In the like view function")
     if request.method != "POST":
         return JsonResponse({"error": "POST request required"}, status=400)
 
     # get the body of the request
     data = json.loads(request.body)
-    print(f"Received data in body: {data['wish']}")
 
     # like or unlike
     try:
         post = Post.objects.get(pk=post_id)
-        print(f"Post: {post}")
         if post.user == request.user:
             return JsonResponse({"message": "You cannot like your own post"}, status=406)
         elif data['wish'] == 'like':
-            print("inside the like branch")
             post.like.add(request.user)
             post.save()
             return JsonResponse({"message": "Like added"}, status=201)
         elif data['wish'] == 'unlike':
-            print("inside the unlike brach")
             post.like.remove(request.user)
             post.save()
             return JsonResponse({"message": "Like removed"}, status=201)
@@ -163,7 +158,6 @@ def likes_count(request, post_id):
 
 
 def likers(request, post_id):
-    print("inside the likers view function")
     try:
         post = Post.objects.get(pk=post_id)
         likers = post.like.all()
@@ -178,3 +172,13 @@ def likers(request, post_id):
         return JsonResponse({
             "error": f"Could not acquire post id {post_id}"
         }, status=400)
+
+
+@login_required
+def user(request, user_id):
+    print("inside the user api")
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required"}, status=400)
+
+    user = User.object.get(pk=user_id)
+    print(user)
