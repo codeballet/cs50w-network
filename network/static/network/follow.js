@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // listen to follow unfollow submits
+    // profile being looked at
+    profile_id = window.location.pathname.split('/')[1];
+
+    // listen to follow or unfollow submits
     document.querySelector('#follow-form').onsubmit = e => {
         e.preventDefault();
-        console.log(e);
-        // identify who is to be followed
-        profile_id = window.location.pathname.split('/')[1];
         follow(profile_id)
     }
+
+    // populate the following element
+    following(profile_id);
 })
 
 
@@ -29,6 +32,19 @@ function follow(user_id) {
     .catch(error => {
         console.log('Error:', error);
     })
+}
+
+
+function following(profile_id) {
+    // fetch the followers of the profile_id
+    fetch(`following/${profile_id}`)
+    .then(response => response.json())
+    .then(message => {
+        document.querySelector('#following').innerHTML = message.count
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
 }
 
 

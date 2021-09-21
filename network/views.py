@@ -190,10 +190,21 @@ def follow(request, user_id):
         follower.following.add(followed)
 
         return JsonResponse({
-            "followed": followed.username,
-            "follower": follower.username
-        })
+            "message": f"{follower.username} is following {followed.username}"
+        }, status=201)
     except:
         return JsonResponse({
             "error": f"could not register to follow user id {user_id}"
+        }, status=400)
+
+
+def following(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        return JsonResponse({
+            "count": user.following.count()
+        }, status=200)
+    except:
+        return JsonResponse({
+            "error": "Cannot acquire the following count"
         }, status=400)
