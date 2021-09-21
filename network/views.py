@@ -198,6 +198,25 @@ def follow(request, user_id):
         }, status=400)
 
 
+def followers(request, user_id):
+    try:
+        profile = User.objects.get(pk=user_id)
+        users = User.objects.all()
+        count = 0
+
+        for user in users:
+            if profile in user.following.all():
+                count += 1
+
+        return JsonResponse({
+            "count": count
+        })
+    except:
+        return JsonResponse({
+            "error": "Cannot acquire the followers count"
+        })
+
+
 def following(request, user_id):
     try:
         user = User.objects.get(pk=user_id)

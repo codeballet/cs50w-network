@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
         follow(profile_id)
     }
 
+    // populate the followers element
+    followers(profile_id);
+
     // populate the following element
     following(profile_id);
 })
@@ -35,12 +38,27 @@ function follow(user_id) {
 }
 
 
+function followers(profile_id) {
+    // fetch the count of users following the profile_id
+    fetch(`followers/${profile_id}`)
+    .then(response => response.json())
+    .then(message => {
+        // update the followers HTML element
+        document.querySelector('#followers').innerHTML = message.count;
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    })
+}
+
+
 function following(profile_id) {
-    // fetch the followers of the profile_id
+    // fetch the count of users the profile_id is following
     fetch(`following/${profile_id}`)
     .then(response => response.json())
     .then(message => {
-        document.querySelector('#following').innerHTML = message.count
+        // update the following HTML element
+        document.querySelector('#following').innerHTML = message.count;
     })
     .catch(error => {
         console.log('Error:', error);
