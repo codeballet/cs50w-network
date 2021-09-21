@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function button_text(button_id) {
     post_id = button_id.split('_')[1];
-    console.log(post_id)
     // fetch the post
     fetch(`likers/${post_id}`)
     .then(response => response.json())

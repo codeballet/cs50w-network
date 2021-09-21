@@ -15,7 +15,13 @@ function follow(user_id) {
     const csrftoken = getCookie('csrftoken');
 
     // fetch the user to follow
-    fetch(`user/${user_id}`)
+    fetch(`follow/${user_id}`, {
+        method: 'POST',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
     .then(response => response.json())
     .then(message => {
         console.log(message);

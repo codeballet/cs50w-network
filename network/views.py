@@ -175,10 +175,25 @@ def likers(request, post_id):
 
 
 @login_required
-def user(request, user_id):
-    print("inside the user api")
+def follow(request, user_id):
     if request.method != "POST":
-        return JsonResponse({"error": "POST request required"}, status=400)
+        return JsonResponse({
+            "error": "POST request required"
+        }, status=400)
 
-    user = User.object.get(pk=user_id)
-    print(user)
+    try:
+        # acquire the followed and following users
+        followed = User.objects.get(pk=user_id)
+        follower = User.objects.get(pk=request.user.id)
+
+        # add the followed user to the following user
+        follower.following.add(followed)
+
+        return JsonResponse({
+            "followed": followed.username,
+            "follower": follower.username
+        })
+    except:
+        return JsonResponse({
+            "error": f"could not register to follow user id {user_id}"
+        }, status=400)

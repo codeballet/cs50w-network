@@ -5,7 +5,7 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    follower = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    following = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
     def __str__(self):
         return f"{self.username} {self.email}"
