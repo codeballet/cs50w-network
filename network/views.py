@@ -74,13 +74,20 @@ def profile(request, user_id):
     profile = User.objects.get(id=user_id)
     posts = Post.objects.filter(user=profile).order_by('-timestamp')
 
+    # set up pagination
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # get like counts
+    likes = []
+    for page in page_obj:
+        likes.append(page.like.count())
+
     return render(request, "network/profile.html", {
         "profile": profile,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "likes": likes
     })
 
 
@@ -156,6 +163,7 @@ def likes_count(request, post_id):
 
 
 def likers(request, post_id):
+    print("inside the likers view function")
     try:
         post = Post.objects.get(pk=post_id)
         likers = post.like.all()
