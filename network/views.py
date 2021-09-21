@@ -198,6 +198,25 @@ def follow(request, user_id):
         }, status=400)
 
 
+def followed(request, user_id):
+    # check if the current user is following the user_id
+    try:
+        profile = User.objects.get(pk=user_id)
+
+        if profile in request.user.following.all():
+            return JsonResponse({
+                "following": True
+            })
+        else:
+            return JsonResponse({
+                "following": False
+            })
+    except:
+        return JsonResponse({
+            "error": "Could not determine if user is following profile"
+        })
+
+
 def followers(request, user_id):
     try:
         profile = User.objects.get(pk=user_id)

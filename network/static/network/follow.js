@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // profile being looked at
     profile_id = window.location.pathname.split('/')[1];
 
+    // populate the follow button
+    follow_button(profile_id)
+
     // listen to follow or unfollow submits
     document.querySelector('#follow-form').onsubmit = e => {
         e.preventDefault();
@@ -63,6 +66,22 @@ function following(profile_id) {
     .catch(error => {
         console.log('Error:', error);
     });
+}
+
+
+function follow_button(profile_id) {
+    // check if the current user is following the viewed profile
+    fetch(`followed/${profile_id}`)
+    .then(response => response.json())
+    .then(message => {
+        console.log(message)
+        res = message.following
+        // update the follow button
+        document.querySelector('#follow-button').innerHTML = res ? 'Unfollow' : 'Follow';
+    })
+    .catch(error => {
+        console.log('Error:', error)
+    })
 }
 
 

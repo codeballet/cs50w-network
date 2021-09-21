@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // fill in the like form buttons
+    // populate the like form buttons
     document.querySelectorAll('.like-button').forEach(button => {
         button_text(button.id);
     })
