@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function button_text(button_id) {
     post_id = button_id.split('_')[1];
     // fetch the post
-    fetch(`likers/${post_id}`)
+    fetch(`api/likers/${post_id}`)
     .then(response => response.json())
     .then(message => {
         // check if post is liked by current user
@@ -48,7 +48,7 @@ function likes(post_id) {
     );
 
     // update the users like or unlike wish
-    fetch(`like/${post_id}`, {
+    fetch(`api/like/${post_id}`, {
         method: 'POST',
         mode: 'same-origin',
         headers: {
@@ -62,7 +62,7 @@ function likes(post_id) {
     .then(message => {
         console.log(message);
         // update the likes count
-        fetch(`likes/${post_id}`)
+        fetch(`api/likes/${post_id}`)
         .then(response => response.json())
         .then(message => {
             console.log(message);

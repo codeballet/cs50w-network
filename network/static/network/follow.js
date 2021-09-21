@@ -3,12 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     profile_id = window.location.pathname.split('/')[1];
 
     // populate the follow button
-    follow_button(profile_id)
-
-    // listen to follow or unfollow submits
-    document.querySelector('#follow-form').onsubmit = e => {
-        e.preventDefault();
-        follow(profile_id)
+    if (document.querySelector('#follow-form')) {
+        follow_button(profile_id)
     }
 
     // populate the followers element
@@ -16,6 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // populate the following element
     following(profile_id);
+
+    // listen to follow or unfollow submits
+    if (document.querySelector('#follow-form')) {
+        document.querySelector('#follow-form').onsubmit = e => {
+            e.preventDefault();
+            follow(profile_id)
+        }
+    }
 })
 
 
@@ -23,27 +27,54 @@ function follow(user_id) {
     // acquire csrf token
     const csrftoken = getCookie('csrftoken');
 
-    // fetch the user to follow
-    fetch(`follow/${user_id}`, {
-        method: 'POST',
-        mode: 'same-origin',
-        headers: {
-            'X-CSRFToken': csrftoken
-        }
-    })
-    .then(response => response.json())
-    .then(message => {
-        console.log(message);
-    })
-    .catch(error => {
-        console.log('Error:', error);
-    })
+    // fetch the user to follow or unfollow
+    button_status = document.querySelector('#follow-button').innerHTML.toLowerCase()
+
+    if (button_status === "follow") {
+        fetch(`api/follow/${user_id}`, {
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(message => {
+            console.log(message);
+            // update follow button
+            follow_button(user_id);
+            followers(user_id);
+            following(user_id);
+        })
+        .catch(error => {
+            console.log('Error:', error);
+        })
+    } else {
+        fetch(`api/unfollow/${user_id}`, {
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(message => {
+            console.log(message);
+            // update follow button
+            follow_button(user_id);
+            followers(user_id);
+            following(user_id);
+        })
+        .catch(error => {
+            console.log('Error:', error);
+        })
+    }
 }
 
 
 function followers(profile_id) {
     // fetch the count of users following the profile_id
-    fetch(`followers/${profile_id}`)
+    fetch(`api/followers/${profile_id}`)
     .then(response => response.json())
     .then(message => {
         // update the followers HTML element
@@ -57,7 +88,7 @@ function followers(profile_id) {
 
 function following(profile_id) {
     // fetch the count of users the profile_id is following
-    fetch(`following/${profile_id}`)
+    fetch(`api/following/${profile_id}`)
     .then(response => response.json())
     .then(message => {
         // update the following HTML element
@@ -71,7 +102,7 @@ function following(profile_id) {
 
 function follow_button(profile_id) {
     // check if the current user is following the viewed profile
-    fetch(`followed/${profile_id}`)
+    fetch(`api/followed/${profile_id}`)
     .then(response => response.json())
     .then(message => {
         console.log(message)

@@ -45,6 +45,10 @@ def index(request):
     })
 
 
+def following(request, user_id):
+    return render(request, "network/following.html")
+
+
 def login_view(request):
     if request.method == "POST":
 
@@ -120,7 +124,7 @@ def register(request):
 
 # API
 @login_required
-def like(request, post_id):
+def like_api(request, post_id):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required"}, status=400)
 
@@ -144,7 +148,7 @@ def like(request, post_id):
         return JsonResponse({"error": "Like not added"}, status=400)
 
 
-def likes_count(request, post_id):
+def likes_count_api(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
         likes = post.like.count()
@@ -157,7 +161,7 @@ def likes_count(request, post_id):
         }, status=400)
 
 
-def likers(request, post_id):
+def likers_api(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
         likers = post.like.all()
@@ -175,7 +179,7 @@ def likers(request, post_id):
 
 
 @login_required
-def follow(request, user_id):
+def follow_api(request, user_id):
     if request.method != "POST":
         return JsonResponse({
             "error": "POST request required"
@@ -198,7 +202,7 @@ def follow(request, user_id):
         }, status=400)
 
 
-def followed(request, user_id):
+def followed_api(request, user_id):
     # check if the current user is following the user_id
     try:
         profile = User.objects.get(pk=user_id)
@@ -217,7 +221,7 @@ def followed(request, user_id):
         })
 
 
-def followers(request, user_id):
+def followers_api(request, user_id):
     try:
         profile = User.objects.get(pk=user_id)
         users = User.objects.all()
@@ -236,7 +240,7 @@ def followers(request, user_id):
         })
 
 
-def following(request, user_id):
+def following_api(request, user_id):
     try:
         user = User.objects.get(pk=user_id)
         return JsonResponse({
@@ -245,4 +249,28 @@ def following(request, user_id):
     except:
         return JsonResponse({
             "error": "Cannot acquire the following count"
+        }, status=400)
+
+
+@login_required
+def unfollow_api(request, user_id):
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "POST request required"
+        }, status=400)
+
+    try:
+        # acquire the followed and following users
+        followed = User.objects.get(pk=user_id)
+        follower = User.objects.get(pk=request.user.id)
+
+        # add the followed user to the following user
+        follower.following.remove(followed)
+
+        return JsonResponse({
+            "message": f"{follower.username} has stopped following {followed.username}"
+        }, status=201)
+    except:
+        return JsonResponse({
+            "error": f"could not register to unfollow user id {user_id}"
         }, status=400)

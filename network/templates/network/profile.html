@@ -6,12 +6,12 @@
     <h1>{{ profile.username }}'s profile</h1>
 
     <div>
-        <span>Followers: </span><span id="followers">0</span>
+        <span>Followers: </span><span id="followers"></span>
     </div>
     <div>
-        <span>Following: </span><span id="following">0</span>
+        <span>Following: </span><span id="following"></span>
     </div>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and profile != user %}
     <form id="follow-form">
         {% csrf_token %}
         <button id="follow-button" type="submit" class="btn btn-outline-primary btn-sm mt-2"></button>
@@ -20,9 +20,11 @@
 
     {% if page_obj.end_index > 0 %}
 
-        <div class="mt-2">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </div>
+        {% if page_obj.end_index > 10 %}
+            <div class="mt-2">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </div>
+        {% endif %}
         <nav aria-label="Posts pages">
             <ul class="pagination">
                 {% if page_obj.has_previous %}
@@ -56,9 +58,11 @@
         </div>
         {% endfor %}
 
-        <div class="mt-2">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </div>
+        {% if page_obj.end_index > 10 %}
+            <div class="mt-2">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </div>
+        {% endif %}
         <nav aria-label="Posts pages">
             <ul class="pagination">
                 {% if page_obj.has_previous %}
