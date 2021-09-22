@@ -142,7 +142,10 @@ def register(request):
         return render(request, "network/register.html")
 
 
-# API
+#######
+# API #
+#######
+
 @login_required
 def like_api(request, post_id):
     if request.method != "POST":
@@ -293,4 +296,23 @@ def unfollow_api(request, user_id):
     except:
         return JsonResponse({
             "error": f"could not register to unfollow user id {user_id}"
+        }, status=400)
+
+
+def update_api(request, user_id, post_id):
+    print(user_id)
+    print(post_id)
+    if request.method != "PUT":
+        return JsonResponse({
+            "error": "PUT request required"
+        }, status=400)
+
+    try:
+        return JsonResponse({
+            "message": "api not ready yet"
+        }, status=200)
+
+    except:
+        return JsonResponse({
+            "error": "Could not update post content"
         }, status=400)

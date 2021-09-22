@@ -21,5 +21,7 @@ urlpatterns = [
          views.followers_api, name="followers_api"),
     path('api/following/<int:user_id>',
          views.following_api, name="following_api"),
-    path('api/unfollow/<int:user_id>', views.unfollow_api, name="unfollow_api")
+    path('api/unfollow/<int:user_id>', views.unfollow_api, name="unfollow_api"),
+    path('api/update/<int:user_id>/<int:post_id>',
+         views.update_api, name="update_api")
 ]

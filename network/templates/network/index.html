@@ -50,7 +50,10 @@
         <div id="post_{{ post.id }}" class="border p-3 mt-2">
             <div>{{ post.id }}</div>
             <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-            <div id="post-content_{{ post.id }}_{{ post.user.username }}" class="post-content">
+            <form id="content-form_{{ post.id }}">
+                {% csrf_token %}
+            </form>
+            <div id="post-content_{{ post.id }}_{{ post.user.username }}_{{ post.user.pk }}" class="post-content">
                 {{ post.content }}
             </div>
             <div class="text-muted">{{ post.timestamp }}</div>
