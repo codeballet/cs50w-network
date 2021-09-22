@@ -306,10 +306,11 @@ def update_api(request, user_id, post_id):
         }, status=400)
 
     data = json.loads(request.body)
+    content = data['content']
     print(data)
     try:
         return JsonResponse({
-            "message": "still developing"
+            "content": content
         }, status=200)
 
     except:
