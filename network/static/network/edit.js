@@ -40,21 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
                 // create a text element
                 const text_div = document.createElement('div');
-                text_div.id = `textarea_${post_id}`;
+                text_div.id = `text-div_${post_id}`;
                 const textarea = document.createElement('textarea');
                 textarea.id = `textarea_${post_id}`
-                textarea.innerText = current_content.trim();
+                textarea.innerHTML = current_content.trim();
     
                 // replace post content with textarea
                 const replace_text = document.querySelector(`#post-content_${post_id}_${username}_${user_id}`);
-                // replace_text.replaceWith(text_div);
-                // document.querySelector(`#textarea_${post_id}`).append(textarea);
                 replace_text.style.display = 'none';
                 const form = document.querySelector(`#content-form_${post_id}`);
                 form.style.display = 'block';
                 form.append(text_div);
-                document.querySelector(`#textarea_${post_id}`).append(textarea);
+                document.querySelector(`#text-div_${post_id}`).append(textarea);
     
+                // eventlistener for textarea
+                document.querySelector(`#textarea_${post_id}`).addEventListener('onchange', e => {
+                    // do something
+                })
                 // acquire csrf token
                 const csrftoken = getCookie('csrftoken');
 
@@ -64,7 +66,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     mode: 'same-origin',
                     headers: {
                         'X-CSRFToken': csrftoken
-                    }
+                    },
+                    body: JSON.stringify({
+                        content: "textarea content"
+                    })
                 })
                 .then(response => response.json())
                 .then(message => {

@@ -300,16 +300,16 @@ def unfollow_api(request, user_id):
 
 
 def update_api(request, user_id, post_id):
-    print(user_id)
-    print(post_id)
     if request.method != "PUT":
         return JsonResponse({
             "error": "PUT request required"
         }, status=400)
 
+    data = json.loads(request.body)
+    print(data)
     try:
         return JsonResponse({
-            "message": "api not ready yet"
+            "message": "still developing"
         }, status=200)
 
     except:
