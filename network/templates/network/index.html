@@ -47,10 +47,12 @@
         </nav>
 
         {% for post, like in page_obj|zip:likes %}
-        <div class="border p-3 mt-2">
+        <div id="post_{{ post.id }}" class="border p-3 mt-2">
             <div>{{ post.id }}</div>
             <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-            <div>{{ post.content }}</div>
+            <div id="post-content_{{ post.id }}_{{ post.user.username }}" class="post-content">
+                {{ post.content }}
+            </div>
             <div class="text-muted">{{ post.timestamp }}</div>
             <div>
                 <span>Likes:</span>
@@ -92,4 +94,5 @@
 
 {% block script %}
     <script src="{% static 'network/likes.js' %}"></script>
+    <script src="{% static 'network/edit.js' %}"></script>
 {% endblock %}
