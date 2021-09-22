@@ -45,8 +45,28 @@ def index(request):
     })
 
 
-def following(request, user_id):
-    return render(request, "network/following.html")
+@login_required
+def following(request):
+    following = request.user.following.all()
+    print(following)
+
+    posts = Post.objects.order_by('-timestamp').filter(user__in=following)
+    print(posts)
+
+    # set up pagination
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # get like counts
+    likes = []
+    for page in page_obj:
+        likes.append(page.like.count())
+
+    return render(request, "network/following.html", {
+        "page_obj": page_obj,
+        "likes": likes
+    })
 
 
 def login_view(request):
