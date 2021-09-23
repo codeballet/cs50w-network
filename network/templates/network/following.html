@@ -7,69 +7,79 @@
 
     {% if page_obj.end_index > 0 %}
 
-    {% if page_obj.end_index > 10 %}
-        <div class="mt-2">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </div>
-    {% endif %}
-    <nav aria-label="Posts pages">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-    
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-
-    {% for post, like in page_obj|zip:likes %}
-    <div class="border p-3 mt-2">
-        <div>{{ post.id }}</div>
-        <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-        <div>{{ post.content }}</div>
-        <div class="text-muted">{{ post.timestamp }}</div>
-        <div>
-            <span>Likes:</span>
-            <span id="likes-count_{{ post.id }}">{{ like }}</span>
-        </div>
-        {% if user.is_authenticated and post.user != request.user %}
-        <form id="like-form_{{ post.id }}" class="like-form">
-            {% csrf_token %}
-            <button id="like-button_{{ post.id }}" type="submit" class="like-button btn btn-outline-primary btn-sm mt-2"></button>
-        </form>
+        {% if page_obj.end_index > 10 %}
+            <div class="mt-2">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </div>
         {% endif %}
-    </div>
-    {% endfor %}
+        <nav aria-label="Posts pages">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+        
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
 
-    {% if page_obj.end_index > 10 %}
-        <div class="mt-2">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        {% for post, like in page_obj|zip:likes %}
+        <div id="post_{{ post.id }}" class="border p-3 mt-2">
+            <div>{{ post.id }}</div>
+            <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+            <form id="content-form_{{ post.id }}" class="content-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input id="content-text_{{ post.id }}" class="content-text form-control" type="textarea">
+                </div>
+                <input id="content-submit_{{ post.id }}" class="content-submit btn btn-primary btn-sm" type="submit" value="Submit">
+            </form>
+            <div id="post-content_{{ post.id }}_{{ post.user.username }}_{{ post.user.pk }}" class="post-content">
+                {{ post.content }}
+            </div>
+            <div class="text-muted">{{ post.timestamp }}</div>
+            <div>
+                <span>Likes:</span>
+                <span id="likes-count_{{ post.id }}">{{ like }}</span>
+            </div>
+            {% if user.is_authenticated and post.user != request.user %}
+            <form id="like-form_{{ post.id }}" class="like-form">
+                {% csrf_token %}
+                <button id="like-button_{{ post.id }}" type="submit" class="like-button btn btn-outline-primary btn-sm mt-2"></button>
+            </form>
+            {% endif %}
         </div>
-    {% endif %}
-    <nav aria-label="Posts pages">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-    
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+        {% endfor %}
 
-{% else %}
-<div>No posts!</div>
-{% endif %}
+        {% if page_obj.end_index > 10 %}
+            <div class="mt-2">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </div>
+        {% endif %}
+        <nav aria-label="Posts pages">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+        
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    {% else %}
+    <div>No posts!</div>
+    {% endif %}
 
 {% endblock %}
 
 {% block script %}
     <script src="{% static 'network/likes.js' %}"></script>
+    <script src="{% static 'network/edit.js' %}"></script>
 {% endblock %}

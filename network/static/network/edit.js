@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // acquire text value of textfield
                     const new_text = document.querySelector(`#content-text_${post_id}`).value;
-                    console.log(new_text);
 
                     // acquire csrf token
                     const csrftoken = getCookie('csrftoken');
@@ -79,6 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         // update the post with the new content
                         replace_text.innerHTML = message.content;
                         replace_text.style.display = 'block';
+                        // show edit button
+                        document.querySelector(`#edit-button_${post_id}_${user_id}`).style.display = 'block';
+
                     })
                     .catch(error => {
                         console.log('Error:', error);
