@@ -28,7 +28,6 @@
 
         {% for post, like in page_obj|zip:likes %}
         <div id="post_{{ post.id }}" class="border p-3 mt-2">
-            <div>{{ post.id }}</div>
             <a class="font-weight-bold" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
             <form id="content-form_{{ post.id }}" class="content-form">
                 {% csrf_token %}
