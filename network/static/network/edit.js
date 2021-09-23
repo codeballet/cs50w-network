@@ -80,7 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         replace_text.style.display = 'block';
                         // show edit button
                         document.querySelector(`#edit-button_${post_id}_${user_id}`).style.display = 'block';
-
+                        // check if new message is undefined (something went wrong)
+                        if (replace_text.innerHTML === 'undefined') {
+                            // put back old text
+                            replace_text.innerHTML = current_content;
+                        }
                     })
                     .catch(error => {
                         console.log('Error:', error);
