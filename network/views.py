@@ -299,18 +299,34 @@ def unfollow_api(request, user_id):
         }, status=400)
 
 
+@login_required
 def update_api(request, user_id, post_id):
     if request.method != "PUT":
         return JsonResponse({
             "error": "PUT request required"
         }, status=400)
 
-    data = json.loads(request.body)
-    content = data['content']
-    print(data)
-    try:
+    if user_id != request.user.id:
         return JsonResponse({
-            "content": content
+            "error": "You are not authorized to edit the post"
+        }, status=401)
+
+    try:
+        # get the data from the request
+        data = json.loads(request.body)
+        content = data['content']
+
+        # update the db
+        post = Post.objects.get(pk=post_id)
+        post.content = content
+        post.save()
+
+        # get the new content from db
+        updated_post = Post.objects.get(pk=post_id)
+        updated_content = updated_post.content
+
+        return JsonResponse({
+            "content": updated_content
         }, status=200)
 
     except:

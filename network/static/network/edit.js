@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelector(`#edit-button_${post_id}_${user_id}`).style.display = 'none';
 
                 // content form eventlistener
-                document.querySelector(`#content-form_${post_id}`).addEventListener('submit', e => {
+                form.addEventListener('submit', e => {
                     e.preventDefault();
 
                     // acquire text value of textfield
@@ -74,10 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.json())
                     .then(message => {
                         console.log(message);
-
-                        // TODO: hide the form
-
-                        // TODO: update the post with the new content
+                        // hide the form
+                        form.style.display = 'none';
+                        // update the post with the new content
+                        replace_text.innerHTML = message.content;
+                        replace_text.style.display = 'block';
                     })
                     .catch(error => {
                         console.log('Error:', error);
